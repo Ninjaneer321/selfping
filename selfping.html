@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Test</title>
+</head>
+<body>
+    <label for="urlInput">URL:</label>
+    <input type="text" id="urlInput" value="">
+
+    <button id="startBtn">Start</button>
+    <button id="stopBtn">Stop</button>
+
+    <div id="results"></div>
+
+    <script>
+        let tests = [];
+        let isTesting = false;
+
+        const urlInput = document.getElementById('urlInput');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resultsDiv = document.getElementById('results');
+
+        // Установка URL по умолчанию на URL текущей страницы
+        urlInput.value = window.location.href;
+
+        startBtn.addEventListener('click', startTests);
+        stopBtn.addEventListener('click', stopTests);
+
+        async function startTests() {
+            if (isTesting) return;
+            isTesting = true;
+            tests = [];
+
+            while (isTesting) {
+                const testResult = await runTest();
+                tests.push(testResult);
+                displayResult(testResult);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
+
+        async function runTest() {
+            const url = urlInput.value;
+            const startTime = performance.now();
+            let statusCode, contentLength;
+
+            try {
+                const response = await fetch(url);
+                statusCode = response.status;
+
+                let responseData = await response.text();
+                contentLength = responseData.length; // Измеряем длину ответа
+
+                const endTime = performance.now();
+                const elapsedTime = endTime - startTime;
+                return { elapsedTime, statusCode, contentLength };
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return { elapsedTime: null, statusCode: null, contentLength: null };
+            }
+        }
+
+        function stopTests() {
+            isTesting = false;
+            if (tests.length === 0) return;
+
+            const elapsedTimeValues = tests.map(test => test.elapsedTime).filter(value => value !== null);
+            const minTime = Math.min(...elapsedTimeValues).toFixed(2);
+            const maxTime = Math.max(...elapsedTimeValues).toFixed(2);
+            const avgTime = (elapsedTimeValues.reduce((acc, curr) => acc + curr, 0) / elapsedTimeValues.length).toFixed(2);
+
+            displaySummary(minTime, maxTime, avgTime);
+        }
+
+        function displayResult(testResult) {
+            const resultParagraph = document.createElement('p');
+            resultParagraph.textContent = `Time: ${testResult.elapsedTime.toFixed(2)} ms, Status Code: ${testResult.statusCode}, Content Length: ${testResult.contentLength}`;
+            resultsDiv.appendChild(resultParagraph);
+        }
+
+        function displaySummary(minTime, maxTime, avgTime) {
+            const summaryParagraph = document.createElement('p');
+            summaryParagraph.textContent = `Min Time: ${minTime} ms, Max Time: ${maxTime} ms, Avg Time: ${avgTime} ms`;
+            resultsDiv.appendChild(summaryParagraph);
+        }
+    </script>
+</body>
+</html>
+
