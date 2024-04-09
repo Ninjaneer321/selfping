@@ -47,9 +47,7 @@
         }
 
         .repo-link {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
+            margin-top: 20px;
             color: #007bff; /* Синий текст */
         }
 
@@ -72,6 +70,10 @@
     <div id="results"></div>
 
     <div class="stats" id="statsDiv" style="display: none;"></div>
+
+    <div class="repo-link">
+        <a href="https://github.com/yaroslaff/selfping">github.com/yaroslaff/selfping</a>
+    </div>
 
     <script>
         let tests = [];
@@ -148,9 +150,5 @@
             statsDiv.style.display = 'block';
         }
     </script>
-
-    <div class="repo-link">
-        <a href="https://github.com/yaroslaff/selfping">github.com/yaroslaff/selfping</a>
-    </div>
 </body>
 </html>
