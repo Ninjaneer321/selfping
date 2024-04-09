@@ -6,4 +6,4 @@ It will work for same site only (because of CORS restrictions).
 
 In the end - it will show basic summary.
 
-Install - just put selfping.html somewhere on your site.
+Install - just put [selfping.html](https://raw.githubusercontent.com/yaroslaff/selfping/master/selfping.html) somewhere on your site.
