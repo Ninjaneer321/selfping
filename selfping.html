@@ -4,15 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fetch Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa; /* Светло-серый фон */
+            color: #343a40; /* Темно-синий текст */
+        }
+
+        label {
+            font-weight: bold;
+            color: #343a40; /* Темно-синий текст */
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 5px 10px;
+            margin-right: 10px;
+            cursor: pointer;
+            background-color: #007bff; /* Синий фон */
+            color: #fff; /* Белый текст */
+            border: none;
+            border-radius: 5px;
+        }
+
+        #results {
+            margin-top: 20px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .repo-link {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: #007bff; /* Синий текст */
+        }
+
+        .stats {
+            background-color: #c8cbcf; /* Серый фон для статистики */
+            color: #343a40; /* Темно-синий текст */
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <label for="urlInput">URL:</label>
-    <input type="text" id="urlInput" value="">
+    <input type="text" id="urlInput" value=""> <!-- Значение по умолчанию будет текущим URL -->
 
     <button id="startBtn">Start</button>
     <button id="stopBtn">Stop</button>
 
     <div id="results"></div>
+
+    <div class="stats" id="statsDiv" style="display: none;"></div>
 
     <script>
         let tests = [];
@@ -22,8 +81,9 @@
         const startBtn = document.getElementById('startBtn');
         const stopBtn = document.getElementById('stopBtn');
         const resultsDiv = document.getElementById('results');
+        const statsDiv = document.getElementById('statsDiv');
 
-        // Установка URL по умолчанию на URL текущей страницы
+        // Установка URL по умолчанию на текущий URL страницы
         urlInput.value = window.location.href;
 
         startBtn.addEventListener('click', startTests);
@@ -33,6 +93,8 @@
             if (isTesting) return;
             isTesting = true;
             tests = [];
+            resultsDiv.innerHTML = '';
+            statsDiv.style.display = 'none';
 
             while (isTesting) {
                 const testResult = await runTest();
@@ -82,11 +144,13 @@
         }
 
         function displaySummary(minTime, maxTime, avgTime) {
-            const summaryParagraph = document.createElement('p');
-            summaryParagraph.textContent = `Min Time: ${minTime} ms, Max Time: ${maxTime} ms, Avg Time: ${avgTime} ms`;
-            resultsDiv.appendChild(summaryParagraph);
+            statsDiv.innerHTML = `Min Time: ${minTime} ms, Max Time: ${maxTime} ms, Avg Time: ${avgTime} ms`;
+            statsDiv.style.display = 'block';
         }
     </script>
+
+    <div class="repo-link">
+        <a href="https://github.com/yaroslaff/selfping">github.com/yaroslaff/selfping</a>
+    </div>
 </body>
 </html>
-
